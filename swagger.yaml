@@ -18,6 +18,7 @@ produces:
   - application/json
 paths:
   /devices:
+    x-swagger-router-controller: Devices
     get:
       description: Returns all devices that the user has access to.
       operationId: findDevices
@@ -67,6 +68,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /devices/{serialName}:
+    x-swagger-router-controller: Devices
     get:
       description: Returns a device based on a single serialName.
       operationId: findDeviceBySerialName
