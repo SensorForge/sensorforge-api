@@ -1,0 +1,119 @@
+swagger: "2.0"
+info:
+  version: 0.0.1
+  title: SensorForge Cloud API
+  description: API for accessing the SensorForge cloud.
+  termsOfService: http://sensorforge.com/
+  contact:
+    name: SensorForge API Team
+    email: info@sensorforge.com
+    url: http://sensorforge.com
+host: api.sensorforge.com
+basePath: /v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /devices:
+    get:
+      description: Returns all devices that the user has access to.
+      operationId: findDevices
+      parameters:
+        - name: tags
+          in: query
+          description: tags to filter by
+          required: false
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: array of device definitions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Add a new device. Available only to SensorForge when manufacturing a new sensor. Users should instead use /v1/{deviceSerialName}/claim to claim an already-existing device.
+      operationId: addDevice
+      parameters:
+        - name: device
+          in: body
+          description: device to add to the database
+          required: true
+          schema:
+            $ref: '#/definitions/NewDevice'
+      responses:
+        200:
+          description: array of devices response
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /devices/{serialName}:
+    get:
+      description: Returns a device based on a single serialName.
+      operationId: findDeviceBySerialName
+      parameters:
+        - name: serialName
+          in: path
+          description: serialName of device to fetch
+          required: true
+          type: string
+          maxLength: 64
+      responses:
+        200:
+          description: device response
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Device:
+    allOf:
+      - $ref: '#/definitions/NewDevice'
+      - required:
+        - lastReboot
+        properties:
+          lastReboot:
+            type: string
+            format: date-time  
+  NewDevice:
+    required:
+      - serialName
+      - deviceType
+    properties:
+      serialName:
+        type: string
+        maxLength: 64
+      deviceType:
+        type: string
+        maxLength: 64
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
