@@ -21,7 +21,7 @@ paths:
     x-swagger-router-controller: Devices
     get:
       description: Returns all devices that the user has access to.
-      operationId: findDevices
+      operationId: getDevices
       parameters:
         - name: tags
           in: query
@@ -71,7 +71,7 @@ paths:
     x-swagger-router-controller: Devices
     get:
       description: Returns a device based on a single serialName.
-      operationId: findDeviceBySerialName
+      operationId: getDeviceBySerialName
       parameters:
         - name: serialName
           in: path
