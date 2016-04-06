@@ -16,6 +16,11 @@ consumes:
   - application/json
 produces:
   - application/json
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: apiKey
+    in: header
 paths:
   /devices:
     x-swagger-router-controller: Devices
