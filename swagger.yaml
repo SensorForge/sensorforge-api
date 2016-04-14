@@ -93,6 +93,34 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /keys:
+    x-swagger-router-controller: Keys
+    get:
+      description: Returns a list of all readable API keys.
+      operationId: getKeys
+      responses:
+        200:
+          description: array of key definitions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Key'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Create a new key.
+      operationId: addKey
+      responses:
+        200:
+          description: key info response
+          schema:
+            $ref: '#/definitions/Key'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Device:
     allOf:
@@ -114,6 +142,20 @@ definitions:
       deviceType:
         type: string
         maxLength: 64
+  Key:
+    properties:
+      secret:
+        type: string
+        maxLength: 40
+        minLength: 40
+      createdTimestamp:
+        type: string
+        format: date-time
+      enabled:
+        type: boolean
+      keyDescription:
+        type: string
+        maxLength: 256
   Error:
     required:
       - code
