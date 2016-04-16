@@ -145,9 +145,15 @@ paths:
           format: int32
       responses:
         200:
-          description: device response
+          description: array of sensor readings
           schema:
-            $ref: '#/definitions/Device'
+            type: array
+            items:
+              properties:
+                timestamp:
+                  type: string
+                value:
+                  type: string
         default:
           description: unexpected error
           schema:
