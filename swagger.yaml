@@ -46,21 +46,6 @@ paths:
     get:
       description: Returns all devices that the user has access to.
       operationId: getDevices
-      parameters:
-        - name: tags
-          in: query
-          description: tags to filter by
-          required: false
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-        - name: limit
-          in: query
-          description: maximum number of results to return
-          required: false
-          type: integer
-          format: int32
       responses:
         200:
           description: array of device definitions
@@ -103,6 +88,61 @@ paths:
           required: true
           type: string
           maxLength: 64
+      responses:
+        200:
+          description: device response
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /devices/{serialName}/sensors/{sensorName}/history:
+    x-swagger-router-controller: Devices
+    get:
+      description: Fetches sensor readings.
+      operationId: getSensorHistory
+      parameters:
+        - name: serialName
+          in: path
+          description: serialName of device to fetch
+          required: true
+          type: string
+          maxLength: 64
+        - name: sensorName
+          in: path
+          description: sensorName of sensor to fetch
+          required: true
+          type: string
+          maxLength: 64
+        - name: period
+          in: query
+          description: |
+            length of time, in milliseconds. All sensor readings from the last 
+            [period] milliseconds are returned.
+          required: true
+          type: integer
+          format: int32
+        - name: interval
+          in: query
+          description: |
+            One of “hourly”, “minutely”, or “all”. 
+            “All” returns every sensor reading. 
+            “Minutely” returns at most one sensor reading per minute. 
+            “Hourly” returns at most one sensor reading per hour.
+          required: false
+          default: all
+          type: string
+          maxLength: 10
+        - name: limit
+          in: query
+          description: |
+            Maximum number of values to return. If there were more than [limit] 
+            results in the database, the newest results are returned.
+          required: false
+          default: 1
+          type: integer
+          format: int32
       responses:
         200:
           description: device response
