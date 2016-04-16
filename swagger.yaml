@@ -22,6 +22,25 @@ securityDefinitions:
     name: apiKey
     in: header
 paths:
+  /about:
+    x-swagger-router-controller: About
+    get:
+      description: Returns information about this API.
+      operationId: getAbout
+      responses:
+        200:
+          description: API information
+          schema:
+            type: object
+            properties:
+              hostname:
+                type: string
+              version:
+                type: string
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /devices:
     x-swagger-router-controller: Devices
     get:
