@@ -61,17 +61,27 @@ paths:
       description: Add a new device. Available only to SensorForge when manufacturing a new sensor. Users should instead use /v1/{deviceSerialName}/claim to claim an already-existing device.
       operationId: addDevice
       parameters:
-        - name: device
+        - name: bodyJSON
           in: body
-          description: device to add to the database
           required: true
           schema:
-            $ref: '#/definitions/NewDevice'
+            type: object
+            required:
+              - deviceType
+            properties:
+              deviceType:
+                type: string
+                maxLength: 64
       responses:
         200:
-          description: array of devices response
+          description: device response for newly-added device
           schema:
-            $ref: '#/definitions/Device'
+            properties:
+              serialName:
+                type: string
+              pubNubAuthToken:
+                type: string
+                maxLength: 20
         default:
           description: unexpected error
           schema:
@@ -85,6 +95,25 @@ paths:
         - name: serialName
           in: path
           description: serialName of device to fetch
+          required: true
+          type: string
+          maxLength: 64
+      responses:
+        200:
+          description: device response
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Deletes a device based on a single serialName.
+      operationId: deleteDeviceBySerialName
+      parameters:
+        - name: serialName
+          in: path
+          description: serialName of device to delete
           required: true
           type: string
           maxLength: 64
@@ -188,19 +217,14 @@ paths:
             $ref: '#/definitions/Error'
 definitions:
   Device:
-    allOf:
-      - $ref: '#/definitions/NewDevice'
-      - required:
-        - lastReboot
-        properties:
-          lastReboot:
-            type: string
-            format: date-time  
-  NewDevice:
     required:
+      - lastReboot
       - serialName
       - deviceType
     properties:
+      lastReboot:
+        type: string
+        format: date-time  
       serialName:
         type: string
         maxLength: 64
