@@ -79,6 +79,10 @@ paths:
             properties:
               serialName:
                 type: string
+                maxLength: 64
+              deviceID:
+                type: string
+                maxLength: 10
               pubNubAuthToken:
                 type: string
                 maxLength: 20
