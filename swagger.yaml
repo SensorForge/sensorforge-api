@@ -191,6 +191,38 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /devices/{serialName}/claim:
+    x-swagger-router-controller: Devices
+    post:
+      description: claim a device
+      operationId: claimDevice
+      parameters:
+        - name: serialName
+          in: path
+          description: serialName of device to fetch
+          required: true
+          type: string
+          maxLength: 64
+        - name: bodyJSON
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - claimPIN
+            properties:
+              claimPIN:
+                type: string
+                maxLength: 4
+      responses:
+        200:
+          description: Device information object
+          schema:
+            $ref: '#/definitions/Device'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /keys:
     x-swagger-router-controller: Keys
     get:
